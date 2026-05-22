@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lumière — Photography</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #F9F6F1;
+      --warm-white: #FDFBF8;
+      --parchment: #EDE8DF;
+      --stone: #C4B8A8;
+      --taupe: #9B8E80;
+      --charcoal: #2C2825;
+      --espresso: #1A1410;
+      --terra: #A0856A;
+      --rust: #8B6247;
+      --sage: #8A9B8E;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--charcoal);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--terra);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--terra);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.18s ease;
+      opacity: 0.6;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.5;
+    }
+
+    /* Typography */
+    .font-display { font-family: 'Cormorant Garamond', serif; }
+    .font-body { font-family: 'Jost', sans-serif; }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: multiply;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      color: var(--espresso);
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--terra);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--charcoal); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 8rem 3rem 6rem;
+      background: var(--warm-white);
+      position: relative;
+    }
+    .hero-tagline {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 2rem;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 7vw, 7rem);
+      font-weight: 300;
+      line-height: 0.92;
+      color: var(--espresso);
+      margin-bottom: 2.5rem;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--terra);
+    }
+    .hero-desc {
+      font-size: 0.8rem;
+      line-height: 1.9;
+      color: var(--taupe);
+      max-width: 28ch;
+      letter-spacing: 0.03em;
+      margin-bottom: 3rem;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--warm-white);
+      background: var(--espresso);
+      padding: 1rem 2rem;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      width: fit-content;
+    }
+    .btn-primary:hover { background: var(--terra); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      border-bottom: 1px solid var(--stone);
+      padding-bottom: 0.2rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin-left: 2rem;
+    }
+    .btn-secondary:hover { color: var(--terra); border-color: var(--terra); }
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-img-wrap {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 8s ease;
+      transform: scale(1.08);
+    }
+    .hero-img-wrap:hover img { transform: scale(1); }
+
+    /* Floating number */
+    .hero-number {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 7rem;
+      font-weight: 300;
+      color: rgba(160,133,106,0.12);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    /* Divider line */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--stone);
+      margin: 2rem 0;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      background: var(--parchment);
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      border-top: 1px solid var(--stone);
+    }
+    .stat-item { text-align: center; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--espresso);
+    }
+    .stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      margin-top: 0.2rem;
+    }
+    .stats-divider {
+      width: 1px;
+      height: 2.5rem;
+      background: var(--stone);
+    }
+
+    /* Section styles */
+    section { position: relative; }
+
+    /* About */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 80vh;
+    }
+    .about-img {
+      position: relative;
+      overflow: hidden;
+      background: var(--parchment);
+    }
+    .about-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: sepia(15%) contrast(1.05);
+      transition: transform 6s ease;
+    }
+    .about-img:hover img { transform: scale(1.04); }
+    .about-content {
+      padding: 6rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--warm-white);
+    }
+    .section-label {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 1.5rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--espresso);
+      margin-bottom: 2rem;
+    }
+    .section-title em { font-style: italic; color: var(--terra); }
+    .section-text {
+      font-size: 0.82rem;
+      line-height: 2;
+      color: var(--taupe);
+      letter-spacing: 0.02em;
+      max-width: 42ch;
+    }
+
+    /* Gallery grid */
+    .gallery-section {
+      padding: 6rem 3rem;
+      background: var(--cream);
+    }
+    .gallery-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 3.5rem;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 1rem;
+    }
+    .gal-item {
+      overflow: hidden;
+      position: relative;
+      background: var(--parchment);
+    }
+    .gal-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: sepia(8%) brightness(1.02);
+      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.5s ease;
+    }
+    .gal-item:hover img { transform: scale(1.06); filter: sepia(0%) brightness(1.04); }
+
+    .gal-item:nth-child(1) { grid-column: span 5; aspect-ratio: 4/5; }
+    .gal-item:nth-child(2) { grid-column: span 4; aspect-ratio: 3/4; }
+    .gal-item:nth-child(3) { grid-column: span 3; aspect-ratio: 2/3; }
+    .gal-item:nth-child(4) { grid-column: span 3; aspect-ratio: 4/3; }
+    .gal-item:nth-child(5) { grid-column: span 5; aspect-ratio: 16/9; }
+    .gal-item:nth-child(6) { grid-column: span 4; aspect-ratio: 4/3; }
+
+    /* Overlay caption */
+    .gal-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1.5rem;
+      background: linear-gradient(to top, rgba(26,20,16,0.6), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      transform: translateY(6px);
+      transition: all 0.4s ease;
+    }
+    .gal-item:hover .gal-caption { opacity: 1; transform: translateY(0); }
+    .gal-caption-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: #FDFBF8;
+      font-style: italic;
+    }
+    .gal-caption-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(253,251,248,0.65);
+      margin-top: 0.2rem;
+    }
+
+    /* Services */
+    .services {
+      padding: 7rem 3rem;
+      background: var(--parchment);
+    }
+    .services-header {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .service-card {
+      background: var(--warm-white);
+      padding: 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s ease;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--terra);
+      transition: width 0.5s ease;
+    }
+    .service-card:hover::before { width: 100%; }
+    .service-card:hover { background: #FDFAF6; }
+    .service-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--stone);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+    .service-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--espresso);
+      margin-bottom: 1rem;
+    }
+    .service-desc {
+      font-size: 0.78rem;
+      line-height: 1.9;
+      color: var(--taupe);
+      letter-spacing: 0.02em;
+    }
+    .service-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terra);
+      text-decoration: none;
+      margin-top: 2rem;
+      transition: gap 0.3s ease;
+    }
+    .service-link:hover { gap: 1rem; }
+
+    /* Testimonial */
+    .testimonial {
+      padding: 8rem 3rem;
+      background: var(--espresso);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .testimonial::before {
+      content: '"';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20rem;
+      color: rgba(160,133,106,0.08);
+      position: absolute;
+      top: -3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .testimonial-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--cream);
+      max-width: 65ch;
+      margin: 0 auto 3rem;
+      line-height: 1.6;
+    }
+    .testimonial-author {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--terra);
+    }
+
+    /* Contact */
+    .contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .contact-info {
+      padding: 6rem 4rem;
+      background: var(--warm-white);
+    }
+    .contact-form-area {
+      padding: 6rem 4rem;
+      background: var(--cream);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      margin-bottom: 0.5rem;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.8rem 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--stone);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .form-input:focus { border-color: var(--terra); }
+    .form-input::placeholder { color: var(--stone); }
+    .form-submit {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--warm-white);
+      background: var(--espresso);
+      padding: 1rem 2.5rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 1rem;
+    }
+    .form-submit:hover { background: var(--terra); }
+
+    /* Footer */
+    footer {
+      background: var(--espresso);
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+    .footer-copy {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--taupe);
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.35s; }
+    .reveal-delay-4 { transition-delay: 0.5s; }
+
+    /* Photo placeholders with gradient */
+    .photo-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--stone);
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+    }
+    .ph-1 { background: linear-gradient(135deg, #E8DDD0 0%, #D4C5B2 100%); }
+    .ph-2 { background: linear-gradient(135deg, #DACED6 0%, #C4BABB 100%); }
+    .ph-3 { background: linear-gradient(135deg, #D5D0C8 0%, #C4BDB0 100%); }
+    .ph-4 { background: linear-gradient(135deg, #E2D5C5 0%, #CDBFA8 100%); }
+    .ph-5 { background: linear-gradient(135deg, #D8D0C8 0%, #C5BAB0 100%); }
+    .ph-6 { background: linear-gradient(135deg, #DDD5CA 0%, #CFC0AE 100%); }
+    .ph-about { background: linear-gradient(160deg, #E5D8C8 0%, #D0C0AA 40%, #C4B09A 100%); }
+    .ph-hero { background: linear-gradient(160deg, #DDD5C8 0%, #C8B8A2 50%, #B8A48E 100%); }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-logo">Lumière</div>
+    <ul class="nav-links">
+      <li><a href="#gallery">Work</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">Story</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-tagline reveal">Fine Art · Editorial · Portrait</p>
+      <h1 class="hero-title reveal reveal-delay-1">
+        Light<br>
+        <em>finds</em><br>
+        beauty
+      </h1>
+      <p class="hero-desc reveal reveal-delay-2">
+        Photography is the art of freezing a breath. Each frame is a quiet conversation between light, shadow, and the soul.
+      </p>
+      <div class="flex items-center reveal reveal-delay-3">
+        <a href="#gallery" class="btn-primary">View Portfolio</a>
+        <a href="#contact" class="btn-secondary">Book a Session</a>
+      </div>
+      <div class="hero-number">01</div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1400&q=85&fit=crop" alt="Hero portrait" style="width:100%;height:100vh;object-fit:cover;object-position:center top;display:block;">
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-number">12+</div>
+      <div class="stat-label">Years of craft</div>
+    </div>
+    <div class="stats-divider"></div>
+    <div class="stat-item">
+      <div class="stat-number">840</div>
+      <div class="stat-label">Sessions captured</div>
+    </div>
+    <div class="stats-divider"></div>
+    <div class="stat-item">
+      <div class="stat-number">36</div>
+      <div class="stat-label">Countries visited</div>
+    </div>
+    <div class="stats-divider"></div>
+    <div class="stat-item">
+      <div class="stat-number">9</div>
+      <div class="stat-label">Awards received</div>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <section class="gallery-section" id="gallery">
+    <div class="gallery-header reveal">
+      <div>
+        <p class="section-label">Selected Works</p>
+        <h2 class="section-title" style="margin-bottom:0;">The <em>Collection</em></h2>
+      </div>
+      <a href="#" class="btn-secondary">View all works →</a>
+    </div>
+    <div class="gallery-grid">
+      <div class="gal-item reveal">
+        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&q=80&fit=crop" alt="Golden Hour Portrait" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="gal-caption">
+          <div class="gal-caption-title">Golden Hour</div>
+          <div class="gal-caption-tag">Portrait · 2024</div>
+        </div>
+      </div>
+      <div class="gal-item reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80&fit=crop" alt="Soft Silence Editorial" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="gal-caption">
+          <div class="gal-caption-title">Soft Silence</div>
+          <div class="gal-caption-tag">Editorial · 2024</div>
+        </div>
+      </div>
+      <div class="gal-item reveal reveal-delay-2">
+        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80&fit=crop" alt="Reverie Fashion" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="gal-caption">
+          <div class="gal-caption-title">Reverie</div>
+          <div class="gal-caption-tag">Fashion · 2024</div>
+        </div>
+      </div>
+      <div class="gal-item reveal">
+        <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80&fit=crop" alt="Dusk Valley Landscape" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="gal-caption">
+          <div class="gal-caption-title">Dusk Valley</div>
+          <div class="gal-caption-tag">Landscape · 2024</div>
+        </div>
+      </div>
+      <div class="gal-item reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80&fit=crop" alt="Veil of Joy Wedding" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="gal-caption">
+          <div class="gal-caption-title">Veil of Joy</div>
+          <div class="gal-caption-tag">Wedding · 2024</div>
+        </div>
+      </div>
+      <div class="gal-item reveal reveal-delay-2">
+        <img src="https://images.unsplash.com/photo-1588117305388-c2631a279f82?w=800&q=80&fit=crop" alt="Studio Bloom" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="gal-caption">
+          <div class="gal-caption-title">Studio Bloom</div>
+          <div class="gal-caption-tag">Studio · 2024</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="about-img">
+      <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=900&q=85&fit=crop" alt="Photographer" style="width:100%;height:100%;min-height:600px;object-fit:cover;display:block;">
+    </div>
+    <div class="about-content">
+      <p class="section-label reveal">The Photographer</p>
+      <h2 class="section-title reveal reveal-delay-1">
+        Chasing<br><em>light</em> across<br>continents
+      </h2>
+      <div class="divider reveal reveal-delay-2"></div>
+      <p class="section-text reveal reveal-delay-2">
+        For over a decade, I've traveled the world with a single obsession: the way light transforms the ordinary into the eternal. Born from a background in fine art, my photography is a bridge between painting and reality.
+      </p>
+      <p class="section-text reveal reveal-delay-3" style="margin-top:1.2rem;">
+        Whether it's a wedding ceremony on the coast of Amalfi or a silent portrait session in a Rajasthan courtyard — I seek the quiet, honest moment.
+      </p>
+      <a href="#contact" class="btn-primary reveal reveal-delay-4" style="margin-top:2.5rem;">Begin Our Story</a>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services" id="services">
+    <div class="services-header">
+      <p class="section-label reveal">What I Offer</p>
+      <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">
+        Every <em>occasion</em>,<br>beautifully told
+      </h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <div class="service-title">Wedding & Ceremony</div>
+        <p class="service-desc">Timeless documentation of your most sacred day. Soft, natural, and deeply personal — preserving every quiet exchange.</p>
+        <a href="#" class="service-link">Explore →</a>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">02</div>
+        <div class="service-title">Portrait Sessions</div>
+        <p class="service-desc">Individual, couple, and family portraits that reveal character. A relaxed session designed to make you feel genuinely yourself.</p>
+        <a href="#" class="service-link">Explore →</a>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">03</div>
+        <div class="service-title">Editorial & Brand</div>
+        <p class="service-desc">Refined commercial photography for brands with taste. Product, lifestyle, and campaign work rooted in visual storytelling.</p>
+        <a href="#" class="service-link">Explore →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial -->
+  <section class="testimonial">
+    <p class="testimonial-text reveal">
+      "She doesn't take photographs — she receives them. Every image she returns to us feels like a memory we didn't know we needed to keep."
+    </p>
+    <p class="testimonial-author reveal reveal-delay-1">— Ananya & Rohan · Wedding, Udaipur</p>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="contact-info">
+      <p class="section-label reveal">Let's Connect</p>
+      <h2 class="section-title reveal reveal-delay-1">
+        Your <em>story</em><br>begins here
+      </h2>
+      <div class="divider reveal reveal-delay-2"></div>
+      <p class="section-text reveal reveal-delay-2">
+        I take on a limited number of sessions each season to ensure every client receives my full creative attention. Enquire early.
+      </p>
+      <div style="margin-top:3rem;" class="reveal reveal-delay-3">
+        <p class="section-label" style="margin-bottom:0.4rem;">Email</p>
+        <p style="font-size:0.9rem;color:var(--charcoal);">hello@lumierephotography.com</p>
+      </div>
+      <div style="margin-top:1.5rem;" class="reveal reveal-delay-4">
+        <p class="section-label" style="margin-bottom:0.4rem;">Studio</p>
+        <p style="font-size:0.9rem;color:var(--charcoal);">Bengaluru · Mumbai · Available worldwide</p>
+      </div>
+    </div>
+    <div class="contact-form-area">
+      <div class="form-group reveal">
+        <label class="form-label">Your name</label>
+        <input type="text" class="form-input" placeholder="Priya Sharma" />
+      </div>
+      <div class="form-group reveal reveal-delay-1">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-input" placeholder="priya@example.com" />
+      </div>
+      <div class="form-group reveal reveal-delay-2">
+        <label class="form-label">Session type</label>
+        <input type="text" class="form-input" placeholder="Wedding, Portrait, Editorial…" />
+      </div>
+      <div class="form-group reveal reveal-delay-3">
+        <label class="form-label">Tell me your vision</label>
+        <textarea class="form-input" rows="4" placeholder="Describe the mood, occasion, or idea…" style="resize:none;"></textarea>
+      </div>
+      <button class="form-submit reveal reveal-delay-4">Send Enquiry</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">Lumière</div>
+    <p class="footer-copy">© 2025 Lumière Photography. All rights reserved.</p>
+    <p class="footer-copy">Instagram · Pinterest · Behance</p>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(2)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1.5)';
+        ring.style.opacity = '0.3';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.opacity = '0.6';
+      });
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Trigger hero reveals immediately
+    setTimeout(() => {
+      document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('visible'));
+    }, 200);
+  </script>
+</body>
+</html>

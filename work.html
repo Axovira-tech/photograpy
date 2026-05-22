@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lumière — Work</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-logo">Lumière</a>
+    <ul class="nav-links">
+      <li><a href="work.html" class="active">Work</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="story.html">Story</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="page-spacer"></div>
+    
+    <section class="gallery-section" id="gallery">
+      <div class="reveal">
+        <p class="section-label" style="text-align: center;">Selected Works</p>
+        <h1 class="page-header-title">The <em>Collection</em></h1>
+      </div>
+
+      <div class="filter-controls reveal reveal-delay-1">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Editorial</button>
+        <button class="filter-btn">Portrait</button>
+        <button class="filter-btn">Wedding</button>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gal-item reveal reveal-delay-2">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&q=80&fit=crop" alt="Golden Hour Portrait">
+          <div class="gal-caption">
+            <div class="gal-caption-title">Golden Hour</div>
+            <div class="gal-caption-tag">Portrait · 2024</div>
+          </div>
+        </div>
+        <div class="gal-item reveal reveal-delay-3">
+          <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80&fit=crop" alt="Soft Silence Editorial">
+          <div class="gal-caption">
+            <div class="gal-caption-title">Soft Silence</div>
+            <div class="gal-caption-tag">Editorial · 2024</div>
+          </div>
+        </div>
+        <div class="gal-item reveal reveal-delay-4">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80&fit=crop" alt="Reverie Fashion">
+          <div class="gal-caption">
+            <div class="gal-caption-title">Reverie</div>
+            <div class="gal-caption-tag">Fashion · 2024</div>
+          </div>
+        </div>
+        <div class="gal-item reveal">
+          <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80&fit=crop" alt="Dusk Valley Landscape">
+          <div class="gal-caption">
+            <div class="gal-caption-title">Dusk Valley</div>
+            <div class="gal-caption-tag">Landscape · 2024</div>
+          </div>
+        </div>
+        <div class="gal-item reveal reveal-delay-1">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80&fit=crop" alt="Veil of Joy Wedding">
+          <div class="gal-caption">
+            <div class="gal-caption-title">Veil of Joy</div>
+            <div class="gal-caption-tag">Wedding · 2024</div>
+          </div>
+        </div>
+        <div class="gal-item reveal reveal-delay-2">
+          <img src="https://images.unsplash.com/photo-1588117305388-c2631a279f82?w=800&q=80&fit=crop" alt="Studio Bloom">
+          <div class="gal-caption">
+            <div class="gal-caption-title">Studio Bloom</div>
+            <div class="gal-caption-tag">Studio · 2024</div>
+          </div>
+        </div>
+        <!-- More items to make it a full page -->
+        <div class="gal-item reveal reveal-delay-3" style="grid-column: span 6; aspect-ratio: 16/9;">
+          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200&q=80&fit=crop" alt="The Grand Setup">
+          <div class="gal-caption">
+            <div class="gal-caption-title">The Grand Setup</div>
+            <div class="gal-caption-tag">Wedding · 2023</div>
+          </div>
+        </div>
+        <div class="gal-item reveal reveal-delay-4" style="grid-column: span 6; aspect-ratio: 16/9;">
+          <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1200&q=80&fit=crop" alt="Cinematic Silhouette">
+          <div class="gal-caption">
+            <div class="gal-caption-title">Cinematic Silhouette</div>
+            <div class="gal-caption-tag">Portrait · 2023</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a href="index.html" class="footer-logo">Lumière</a>
+        <p class="footer-desc">Capturing the quiet, honest moments across continents. Based in Bengaluru, available worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-heading">Explore</h4>
+        <ul class="footer-links-list">
+          <li><a href="work.html">Portfolio</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="story.html">My Story</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-heading">Contact</h4>
+        <ul class="footer-links-list">
+          <li><a href="mailto:hello@lumierephotography.com">hello@lumiere.com</a></li>
+          <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-heading">Socials</h4>
+        <ul class="footer-links-list">
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Pinterest</a></li>
+          <li><a href="#">Behance</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 Lumière Photography. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
